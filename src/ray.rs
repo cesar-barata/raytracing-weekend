@@ -1,25 +1,33 @@
-use crate::point::*;
+use crate::vector::Vector;
+use crate::color::{Color};
+
+pub type Point3D = Vector<f64>;
 
 #[derive(Default)]
 struct Ray {
-    origin: Point,
-    direction: Vector,
+    origin: Point3D,
+    direction: Vector<f64>,
 }
 
 impl Ray {
-    fn new(origin: Point, direction: Point) -> Ray {
+    pub fn new(origin: Point3D, direction: Vector<f64>) -> Ray {
         Ray { origin, direction }
     }
 
-    fn origin(&self) -> &Point {
+    pub fn origin(&self) -> &Point3D {
         &self.origin
     }
 
-    fn direction(&self) -> &Point {
+    pub fn direction(&self) -> &Vector<f64> {
         &self.direction
     }
 
-    fn at(self, t: f64) -> Point {
-        &self.origin + &(t * &self.direction)
+    pub fn at(self, t: f64) -> Point3D {
+        &self.origin + &(&self.direction * t)
+    }
+
+    pub fn color(&self) -> Color {
+        let t = 0.5 * (self.direction().unit_direction().y() + 1f64);
+        &(&Vector::new(1.0, 1.0, 1.0) * (1.0 - t)) + &(&Vector::new(0.5, 0.7, 1.0) * t)
     }
 }
